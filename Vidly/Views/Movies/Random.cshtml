@@ -6,3 +6,26 @@
 }
 
 <h2>@Model.Movie.Name</h2>
+
+@if (Model.Customers.Count == 0)
+{
+    <p>No one has rented this movie yet.</p>
+}
+else
+{
+    <table class="table table-striped table-hover ">
+        <thead>
+        <tr>
+            <th>Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var customer in @Model.Customers)
+        {
+            <tr>
+                <td>@customer.Name</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
