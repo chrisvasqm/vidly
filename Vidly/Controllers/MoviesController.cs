@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Razor.Language.Intermediate;
 using Vidly.Models;
+using Vidly.ViewModel;
 
 namespace Vidly.Controllers
 {
@@ -18,8 +20,15 @@ namespace Vidly.Controllers
         public IActionResult Random()
         {
             var movie = new Movie {Name = "Shrek"};
+            var customers = new List<Customer>
+            {
+                new Customer {Name = "Carlos"},
+                new Customer {Name = "Juan"}
+            };
+
+            var viewModel = new RandomMovieViewModel {Movie = movie, Customers = customers};
             
-            return View(movie);
+            return View(viewModel);
         }
 
         [Route("movies/edit/{id}")]
