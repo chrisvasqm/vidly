@@ -11,11 +11,17 @@ namespace Vidly.Controllers
     public class MoviesController : Controller
     {
         [Route("movies")]
-        public IActionResult Index(int pageIndex = 1, string sortBy = "Name")
+        public IActionResult Index()
         {
-            return Content(String.Format("pageIndex:{0} & sortBy: {1}", pageIndex, sortBy));
+            var movies = new List<Movie>
+            {
+                new Movie {Id = 1, Name = "Shrek"},
+                new Movie {Id = 2, Name = "Wall-y"}
+            };
+            
+            return View(movies);
         }
-        
+
         [Route("movies/random")]
         public IActionResult Random()
         {
@@ -27,7 +33,7 @@ namespace Vidly.Controllers
             };
 
             var viewModel = new RandomMovieViewModel {Movie = movie, Customers = customers};
-            
+
             return View(viewModel);
         }
 

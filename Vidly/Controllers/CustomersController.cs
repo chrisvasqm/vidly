@@ -18,6 +18,7 @@ namespace Vidly.Controllers
             return View(_customers);
         }
 
+        [Route("customers/details/{id}")]
         public IActionResult Details(int id)
         {
             var customer = _customers.Find(c => c.Id == id);
