@@ -41,3 +41,6 @@ msbuild.wrn
 **/appsettings.Development.json
 **/appsettings.staging.json
 **/appsettings.production.json
+
+Vidly/Migrations/
+Vidly/AppConfig.cs
