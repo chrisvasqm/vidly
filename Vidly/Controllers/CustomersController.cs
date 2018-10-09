@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Vidly.Models;
 
@@ -6,22 +6,30 @@ namespace Vidly.Controllers
 {
     public class CustomersController : Controller
     {
-        private readonly List<Customer> _customers = new List<Customer>
+        private ApplicationContext _context;
+
+        public CustomersController()
         {
-            new Customer {Id = 1, Name = "Customer 1"},
-            new Customer {Id = 2, Name = "Customer 2"}
-        };
+            _context = new ApplicationContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
 
         [Route("customers")]
         public IActionResult Index()
         {
-            return View(_customers);
+            var customers = _context.Customers.ToList(); 
+            
+            return View(customers);
         }
 
         [Route("customers/details/{id}")]
         public IActionResult Details(int id)
         {
-            var customer = _customers.Find(c => c.Id == id);
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
 
             if (customer == null)
                 return NotFound();
