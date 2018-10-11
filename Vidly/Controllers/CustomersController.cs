@@ -1,5 +1,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Vidly.Models;
 
 namespace Vidly.Controllers
@@ -21,7 +22,7 @@ namespace Vidly.Controllers
         [Route("customers")]
         public IActionResult Index()
         {
-            var customers = _context.Customers.ToList(); 
+            var customers = _context.Customers.Include(c => c.MembershipType).ToList(); 
             
             return View(customers);
         }
