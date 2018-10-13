@@ -28,6 +28,17 @@ namespace Vidly.Controllers
 
             return View(movies);
         }
+        
+        [Route("movies/details/{id}")]
+        public IActionResult Details(int id)
+        {
+            var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
+
+            if (movie == null)
+                return NotFound();
+
+            return View(movie);
+        }
 
         [Route("movies/random")]
         public IActionResult Random()
