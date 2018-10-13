@@ -35,3 +35,12 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+
+# ignore appsettings configuration files
+**/appsettings.json
+**/appsettings.Development.json
+**/appsettings.staging.json
+**/appsettings.production.json
+
+Vidly/Migrations/
+Vidly/AppConfig.cs

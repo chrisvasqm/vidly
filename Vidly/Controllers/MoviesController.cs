@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Razor.Language.Intermediate;
+using Microsoft.EntityFrameworkCore;
 using Vidly.Models;
 using Vidly.ViewModel;
 
@@ -10,16 +9,35 @@ namespace Vidly.Controllers
 {
     public class MoviesController : Controller
     {
+        private ApplicationContext _context;
+
+        public MoviesController()
+        {
+            _context = new ApplicationContext();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+
         [Route("movies")]
         public IActionResult Index()
         {
-            var movies = new List<Movie>
-            {
-                new Movie {Id = 1, Name = "Shrek"},
-                new Movie {Id = 2, Name = "Wall-y"}
-            };
-            
+            var movies = _context.Movies.Include(m => m.Genre).ToList();
+
             return View(movies);
+        }
+        
+        [Route("movies/details/{id}")]
+        public IActionResult Details(int id)
+        {
+            var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == id);
+
+            if (movie == null)
+                return NotFound();
+
+            return View(movie);
         }
 
         [Route("movies/random")]
