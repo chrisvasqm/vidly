@@ -32,7 +32,7 @@ namespace Vidly.Controllers
         [Route("movies/details/{id}")]
         public IActionResult Details(int id)
         {
-            var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
+            var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == id);
 
             if (movie == null)
                 return NotFound();
