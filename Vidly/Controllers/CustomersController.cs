@@ -7,7 +7,7 @@ namespace Vidly.Controllers
 {
     public class CustomersController : Controller
     {
-        private ApplicationContext _context;
+        private readonly ApplicationContext _context;
 
         public CustomersController()
         {
@@ -40,7 +40,13 @@ namespace Vidly.Controllers
 
         public IActionResult New()
         {
-            return View();
+            var membershipTypes = _context.MembershipTypes.ToList();
+            var viewModel = new NewCustomerViewModel
+            {
+                MembershipTypes = membershipTypes
+            };
+            
+            return View(viewModel);
         }
     }
 }
