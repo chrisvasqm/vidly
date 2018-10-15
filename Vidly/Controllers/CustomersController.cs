@@ -22,8 +22,8 @@ namespace Vidly.Controllers
         [Route("customers")]
         public IActionResult Index()
         {
-            var customers = _context.Customers.Include(c => c.MembershipType).ToList(); 
-            
+            var customers = _context.Customers.Include(c => c.MembershipType).ToList();
+
             return View(customers);
         }
 
@@ -46,16 +46,27 @@ namespace Vidly.Controllers
             {
                 MembershipTypes = membershipTypes
             };
-            
+
             return View("CustomerForm", viewModel);
         }
 
         [HttpPost]
-        public IActionResult Create(Customer customer)
+        public IActionResult Save(Customer customer)
         {
-            _context.Customers.Add(customer);
+            if (customer.Id == 0)
+                _context.Customers.Add(customer);
+            else
+            {
+                var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
+
+                customerInDb.Name = customer.Name;
+                customerInDb.Birthday = customer.Birthday;
+                customerInDb.MembershipTypeId = customer.MembershipTypeId;
+                customerInDb.IsSubscribedToNewsLetter = customer.IsSubscribedToNewsLetter;
+            }
+
             _context.SaveChanges();
-            
+
             return RedirectToAction("Index", "Customers");
         }
 
