@@ -38,6 +38,7 @@ namespace Vidly.Controllers
             return View(customer);
         }
 
+        [Route("customers/new")]
         public IActionResult New()
         {
             var membershipTypes = _context.MembershipTypes.ToList();
@@ -46,7 +47,7 @@ namespace Vidly.Controllers
                 MembershipTypes = membershipTypes
             };
             
-            return View(viewModel);
+            return View("CustomerForm", viewModel);
         }
 
         [HttpPost]
@@ -56,6 +57,23 @@ namespace Vidly.Controllers
             _context.SaveChanges();
             
             return RedirectToAction("Index", "Customers");
+        }
+
+        [Route("customers/edit/{id}")]
+        public IActionResult Edit(int id)
+        {
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+
+            if (customer == null)
+                return NotFound();
+
+            var viewModel = new NewCustomerViewModel
+            {
+                Customer = customer,
+                MembershipTypes = _context.MembershipTypes.ToList()
+            };
+
+            return View("CustomerForm", viewModel);
         }
     }
 }
