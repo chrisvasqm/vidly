@@ -9,7 +9,7 @@ namespace Vidly.Controllers
 {
     public class MoviesController : Controller
     {
-        private ApplicationContext _context;
+        private readonly ApplicationContext _context;
 
         public MoviesController()
         {
@@ -65,6 +65,12 @@ namespace Vidly.Controllers
         public IActionResult ByReleaseDate(int year, byte month)
         {
             return Content(string.Format("Year: {0}, Month: {1}", year, month));
+        }
+
+        [Route("movies/new")]
+        public IActionResult New()
+        {
+            return View();
         }
     }
 }
