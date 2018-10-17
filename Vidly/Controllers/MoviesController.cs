@@ -9,7 +9,7 @@ namespace Vidly.Controllers
 {
     public class MoviesController : Controller
     {
-        private ApplicationContext _context;
+        private readonly ApplicationContext _context;
 
         public MoviesController()
         {
@@ -28,7 +28,7 @@ namespace Vidly.Controllers
 
             return View(movies);
         }
-        
+
         [Route("movies/details/{id}")]
         public IActionResult Details(int id)
         {
@@ -58,13 +58,55 @@ namespace Vidly.Controllers
         [Route("movies/edit/{id}")]
         public IActionResult Edit(int id)
         {
-            return Content("id: " + id);
+            var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
+
+            if (movie == null)
+                return NotFound();
+
+            var viewModel = new MovieFormViewModel
+            {
+                Genres = _context.Genres.ToList(),
+                Movie = movie
+            };
+
+            return View("MovieForm", viewModel);
         }
 
         [Route("movies/released/{year:regex(\\d{{4}})}/{month:regex(\\d{{2}}):range(1,12)}")]
         public IActionResult ByReleaseDate(int year, byte month)
         {
             return Content(string.Format("Year: {0}, Month: {1}", year, month));
+        }
+
+        [Route("movies/new")]
+        public IActionResult New()
+        {
+            var viewModel = new MovieFormViewModel
+            {
+                Genres = _context.Genres.ToList(),
+            };
+
+            return View("MovieForm", viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Save(Movie movie)
+        {
+            if (movie.Id == 0)
+                _context.Movies.Add(movie);
+            else
+            {
+                var movieInDb = _context.Movies.Single(m => m.Id == movie.Id);
+
+                movieInDb.Name = movie.Name;
+                movieInDb.ReleaseDate = movie.ReleaseDate;
+                movieInDb.GenreId = movie.GenreId;
+                movieInDb.NumberInStock = movie.NumberInStock;
+            }
+
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Movies");
         }
     }
 }
