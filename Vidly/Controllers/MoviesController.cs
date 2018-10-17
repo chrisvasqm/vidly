@@ -28,7 +28,7 @@ namespace Vidly.Controllers
 
             return View(movies);
         }
-        
+
         [Route("movies/details/{id}")]
         public IActionResult Details(int id)
         {
@@ -58,7 +58,18 @@ namespace Vidly.Controllers
         [Route("movies/edit/{id}")]
         public IActionResult Edit(int id)
         {
-            return Content("id: " + id);
+            var movie = _context.Movies.SingleOrDefault(m => m.Id == id);
+
+            if (movie == null)
+                return NotFound();
+
+            var viewModel = new MovieFormViewModel
+            {
+                Genres = _context.Genres.ToList(),
+                Movie = movie
+            };
+
+            return View("MovieForm", viewModel);
         }
 
         [Route("movies/released/{year:regex(\\d{{4}})}/{month:regex(\\d{{2}}):range(1,12)}")]
@@ -74,7 +85,7 @@ namespace Vidly.Controllers
             {
                 Genres = _context.Genres.ToList(),
             };
-            
+
             return View("MovieForm", viewModel);
         }
 
@@ -89,7 +100,7 @@ namespace Vidly.Controllers
 
                 movieInDb.Name = movie.Name;
                 movieInDb.ReleaseDate = movie.ReleaseDate;
-                movieInDb.Genre.Name = movie.Genre.Name;
+                movieInDb.GenreId = movie.GenreId;
                 movieInDb.NumberInStock = movie.NumberInStock;
             }
 
