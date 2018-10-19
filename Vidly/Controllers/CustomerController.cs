@@ -6,11 +6,11 @@ using Vidly.ViewModel;
 
 namespace Vidly.Controllers
 {
-    public class CustomersController : Controller
+    public class CustomerController : Controller
     {
         private readonly ApplicationContext _context;
 
-        public CustomersController()
+        public CustomerController()
         {
             _context = new ApplicationContext();
         }
@@ -54,6 +54,17 @@ namespace Vidly.Controllers
         [HttpPost]
         public IActionResult Save(Customer customer)
         {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = new CustomerFormViewModel
+                {
+                    Customer = customer,
+                    MembershipTypes = _context.MembershipTypes.ToList()
+                };
+                
+                return View("CustomerForm", viewModel);
+            }
+            
             if (customer.Id == 0)
                 _context.Customers.Add(customer);
             else
@@ -68,7 +79,7 @@ namespace Vidly.Controllers
 
             _context.SaveChanges();
 
-            return RedirectToAction("Index", "Customers");
+            return RedirectToAction("Index", "Customer");
         }
 
         [Route("customers/edit/{id}")]
