@@ -7,5 +7,7 @@ namespace Vidly.ViewModel
     {
         public IEnumerable<MembershipType> MembershipTypes { get; set; }
         public Customer Customer { get; set; }
+
+        public string Title => (Customer.Name == null) ? "New Customer" : "Edit Customer";
     }
 }
